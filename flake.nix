@@ -14,23 +14,10 @@
   };
 
   outputs = { self, nixpkgs, dream2nix, substrate, ... }:
-    let
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
-      eachSystem = f: nixpkgs.lib.genAttrs systems f;
-      mkOutputs = system:
-        let
-          tsLibrary = import "${substrate}/lib/typescript-library.nix" {
-            inherit system nixpkgs dream2nix;
-          };
-        in
-        tsLibrary {
-          name = "pleme-form-system";
-          src = self;
-        };
-    in
-    {
-      packages = eachSystem (system: (mkOutputs system).packages);
-      devShells = eachSystem (system: (mkOutputs system).devShells);
-      apps = eachSystem (system: (mkOutputs system).apps);
+    (import "${substrate}/lib/typescript-library-flake.nix" {
+      inherit nixpkgs dream2nix substrate;
+    }) {
+      inherit self;
+      name = "pleme-form-system";
     };
 }
