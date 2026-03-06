@@ -11,11 +11,15 @@
       url = "github:pleme-io/substrate";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    devenv = {
+      url = "github:cachix/devenv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, dream2nix, substrate, ... }:
+  outputs = { self, nixpkgs, dream2nix, substrate, devenv, ... }:
     (import "${substrate}/lib/typescript-library-flake.nix" {
-      inherit nixpkgs dream2nix substrate;
+      inherit nixpkgs dream2nix substrate devenv;
     }) {
       inherit self;
       name = "pleme-form-system";
